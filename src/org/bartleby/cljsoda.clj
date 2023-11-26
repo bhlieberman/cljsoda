@@ -1,16 +1,15 @@
 (ns org.bartleby.cljsoda
-  (:require [clojure.pprint :as pp]
-            [hato.client :as hc]))
+  (:require [hato.client :as hc]))
 
 (defprotocol SodaRequest
-            (-get-dataset-columns [this]))
+  (-get-dataset-columns [this]))
 
 (defrecord SampleRequest [endpoint app-token user pass]
   SodaRequest
   (-get-dataset-columns [_]
     (let [resp (try (hc/get (str endpoint "?$limit=0"))
                     (catch clojure.lang.ExceptionInfo e
-                      (let [req-status (-> e ex-data :status)] 
+                      (let [req-status (-> e ex-data :status)]
                         (condp = req-status
                           403 403
                           404 (println "Resource not found.")
